@@ -12,3 +12,4 @@ D:\College\Capgemini Traning\Notes of Class\In lab Experience\PROJECTS\Git+Quant
 D:\College\Capgemini Traning\Notes of Class\In lab Experience\PROJECTS\Git+QuantityMeasurementApp\QuantityMeasurementApp\QuantityMeasurementApp\obj\Debug\net10.0\QuantityMeasurementApp.pdb
 D:\College\Capgemini Traning\Notes of Class\In lab Experience\PROJECTS\Git+QuantityMeasurementApp\QuantityMeasurementApp\QuantityMeasurementApp\obj\Debug\net10.0\QuantityMeasurementApp.genruntimeconfig.cache
 D:\College\Capgemini Traning\Notes of Class\In lab Experience\PROJECTS\Git+QuantityMeasurementApp\QuantityMeasurementApp\QuantityMeasurementApp\obj\Debug\net10.0\ref\QuantityMeasurementApp.dll
+D:\College\Capgemini Traning\Notes of Class\In lab Experience\PROJECTS\Git+QuantityMeasurementApp\QuantityMeasurementApp\QuantityMeasurementApp\obj\Debug\net10.0\QuantityMeasurementApp.sourcelink.json

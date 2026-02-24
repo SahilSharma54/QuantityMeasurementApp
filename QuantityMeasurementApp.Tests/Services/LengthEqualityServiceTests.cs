@@ -4,9 +4,6 @@ using QuantityMeasurementApp.Services;
 
 namespace QuantityMeasurementApp.Tests.Services;
 
-/// <summary>
-/// UC1 tests → Feet equality using service.
-/// </summary>
 public class LengthEqualityServiceTests
 {
     private LengthEqualityService _service;
@@ -17,30 +14,43 @@ public class LengthEqualityServiceTests
         _service = new LengthEqualityService();
     }
 
-    [Test]
-    public void ZeroFeet_ShouldBeEqual()
-    {
-    var a = LengthMeasure.Feet(0);
-    var b = LengthMeasure.Feet(0);
-
-    Assert.That(_service.AreEqual(a, b), Is.True);
-    }
+    // ===== UC1 tests (existing) =====
 
     [Test]
     public void SameFeet_ShouldBeEqual()
     {
-    var a = LengthMeasure.Feet(1);
-    var b = LengthMeasure.Feet(1);
+        var a = LengthMeasure.Feet(1);
+        var b = LengthMeasure.Feet(1);
 
-    Assert.That(_service.AreEqual(a, b), Is.True);
+        Assert.IsTrue(_service.AreEqual(a, b));
+    }
+
+    // ===== UC2 tests (NEW) =====
+
+    [Test]
+    public void SameInch_ShouldBeEqual()
+    {
+        var a = LengthMeasure.Inch(5);
+        var b = LengthMeasure.Inch(5);
+
+        Assert.IsTrue(_service.AreEqual(a, b));
     }
 
     [Test]
-    public void DifferentFeet_ShouldNotBeEqual()
+    public void DifferentInch_ShouldNotBeEqual()
     {
-    var a = LengthMeasure.Feet(1);
-    var b = LengthMeasure.Feet(2);
+        var a = LengthMeasure.Inch(2);
+        var b = LengthMeasure.Inch(7);
 
-    Assert.That(_service.AreEqual(a, b), Is.False);
+        Assert.IsFalse(_service.AreEqual(a, b));
+    }
+
+    [Test]
+    public void FeetAndInch_ShouldNotBeEqual()
+    {
+        var feet = LengthMeasure.Feet(1);
+        var inch = LengthMeasure.Inch(1);
+
+        Assert.IsFalse(_service.AreEqual(feet, inch));
     }
 }

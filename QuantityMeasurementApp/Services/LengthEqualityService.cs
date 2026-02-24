@@ -3,23 +3,23 @@ using QuantityMeasurementApp.Models;
 namespace QuantityMeasurementApp.Services;
 
 /// <summary>
-/// Handles equality comparison for measurements.
-/// UC1 → Feet equality.
+/// Handles equality comparison for length measurements.
+/// Supports Feet (UC1) and Inch (UC2).
 /// </summary>
 public class LengthEqualityService
 {
     public bool AreEqual(LengthMeasure first, LengthMeasure second)
     {
-        // Null check
+        // Null safety
         if (first is null || second is null)
             return false;
 
-        // Compare values with tolerance
-        bool valueEqual = Math.Abs(first.Value - second.Value) < 0.0001;
+        // Units must match (UC2 rule)
+        if (first.Unit != second.Unit)
+            return false;
 
-        // Compare units
-        bool unitEqual = first.Unit == second.Unit;
-
-        return valueEqual && unitEqual;
+        // Value comparison using tolerance
+        double difference = Math.Abs(first.Value - second.Value);
+        return difference < 0.0001;
     }
 }

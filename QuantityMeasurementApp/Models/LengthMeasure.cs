@@ -1,8 +1,8 @@
 namespace QuantityMeasurementApp.Models;
 
 /// <summary>
-/// Represents a length measurement.
-/// Only stores value and unit.
+/// Represents a length measurement with value and unit.
+/// Supports Feet (UC1) and Inch (UC2).
 /// </summary>
 public class LengthMeasure
 {
@@ -15,8 +15,15 @@ public class LengthMeasure
         Unit = unit;
     }
 
+    // UC1 → Feet factory
     public static LengthMeasure Feet(double value)
     {
         return new LengthMeasure(value, "FEET");
+    }
+
+    // UC2 → Inch factory (NEW)
+    public static LengthMeasure Inch(double value)
+    {
+        return new LengthMeasure(value, "INCH");
     }
 }
