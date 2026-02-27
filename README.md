@@ -1,70 +1,44 @@
-## 📘 UC2 — Inch Measurement Equality
+📏 Quantity Measurement App — UC3 (Generic Quantity)
+📌 Description
 
-### Description
+UC3 refactors the separate Feet and Inch implementations into one generic class QuantityLength, following the DRY principle.
 
-UC2 adds support for **inch measurement equality**.
-The application compares two `LengthMeasure` objects and returns true only when both the **value** and **unit (INCH)** are the same.
+A LengthUnit enum is introduced and equality is handled using a common base unit conversion.
 
----
+🎯 Objective
 
-### ✅ Preconditions
+Remove duplicate code from UC1 and UC2
 
-* Two measurements are created using `LengthMeasure.Inch(value)`.
-* Both measurements must use the same unit.
+Create a generic quantity class
 
----
+Support cross-unit comparison (1 Foot = 12 Inches)
 
-### 🔄 Main Flow
+Improve maintainability and scalability
 
-1. Create two inch measurements using the factory method.
-2. Pass them to `LengthEqualityService`.
-3. Service checks for null inputs.
-4. Service ensures both units match.
-5. Values are compared using tolerance (`0.0001`).
-6. Equality result is returned.
+🏗 Implementation
 
----
+LengthUnit enum → defines units
 
-### 📌 Postconditions
+QuantityLength class → stores value + unit
 
-* Returns **true** when inch values and units match.
-* Returns **false** when values differ or units differ.
-* Feet and inch measurements are not equal.
+Equality → converts values to base unit before comparison
 
----
+Example:
 
-### 🧩 Implementation Overview
+1 Foot == 12 Inch → true
+🧪 Tests
 
-* Added `Inch(value)` factory method in `LengthMeasure`.
-* Updated `LengthEqualityService` to enforce same-unit comparison.
-* Value comparison uses tolerance to handle floating-point precision.
+Same unit equality
 
----
+Cross-unit equality
 
-### 🧪 Tests (NUnit)
+Different values inequality
 
-* `SameInch_ShouldBeEqual`
-* `DifferentInch_ShouldNotBeEqual`
-* `FeetAndInch_ShouldNotBeEqual`
+Null & reference checks
 
----
+🚀 Run
+git checkout feature/UC3-GenericQuantity
+dotnet test
+✅ Result
 
-### 📁 Project Structure
-
-QuantityMeasurementApp
-├── Models
-│   └── LengthMeasure.cs
-├── Services
-│   └── LengthEqualityService.cs
-└── QuantityMeasurementApp.Tests
-└── LengthEqualityServiceTests.cs
-
----
-
-### 🎯 Concepts Covered
-
-* Multi-unit support
-* Unit-based equality rules
-* Floating-point tolerance comparison
-* Null safety
-* Unit testing with NUnit
+UC3 removes duplication and makes the system scalable for adding new units like Meter, Yard, etc.
