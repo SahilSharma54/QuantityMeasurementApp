@@ -48,4 +48,31 @@ public class QuantityLengthTests
 
         Assert.IsFalse(a.Equals(null));
     }
+
+    [Test]
+    public void Yard_To_Feet_ShouldBeEqual()
+    {
+        var yard = new QuantityLength(1, LengthUnit.Yards);
+        var feet = new QuantityLength(3, LengthUnit.Feet);
+
+        Assert.IsTrue(yard.Equals(feet));
+    }
+
+    [Test]
+    public void Yard_To_Inch_ShouldBeEqual()
+    {
+        var yard = new QuantityLength(1, LengthUnit.Yards);
+        var inch = new QuantityLength(36, LengthUnit.Inch);
+
+        Assert.IsTrue(yard.Equals(inch));
+    }
+
+    [Test]
+    public void Cm_To_Inch_ShouldBeEqual()
+    {
+        var cm = new QuantityLength(1, LengthUnit.Centimeters);
+        var inch = new QuantityLength(0.393701, LengthUnit.Inch);
+
+        Assert.IsTrue(cm.Equals(inch));
+    }
 }
