@@ -1,70 +1,96 @@
-## 📘 UC2 — Inch Measurement Equality
+## UC4 — Add Volume Measurement Using Generic Quantity
 
-### Description
+### 📌 Description
 
-UC2 adds support for **inch measurement equality**.
-The application compares two `LengthMeasure` objects and returns true only when both the **value** and **unit (INCH)** are the same.
+UC4 extends the generic quantity design introduced in UC3 by adding support for **Volume measurements**.
+This ensures that the application follows the **DRY principle** by reusing the same generic quantity logic instead of creating separate classes for each measurement type.
 
----
-
-### ✅ Preconditions
-
-* Two measurements are created using `LengthMeasure.Inch(value)`.
-* Both measurements must use the same unit.
+This use case introduces new units such as **Liters** and **Gallons** while maintaining consistent equality comparison using a common base unit.
 
 ---
 
-### 🔄 Main Flow
+### 🎯 Objective
 
-1. Create two inch measurements using the factory method.
-2. Pass them to `LengthEqualityService`.
-3. Service checks for null inputs.
-4. Service ensures both units match.
-5. Values are compared using tolerance (`0.0001`).
-6. Equality result is returned.
+* Reuse the generic quantity class created in UC3
+* Support multiple measurement types (Length + Volume)
+* Enable equality comparison between different volume units
+* Maintain clean design aligned with SOLID and DRY principles
 
 ---
 
-### 📌 Postconditions
+### 🧱 Design Approach
 
-* Returns **true** when inch values and units match.
-* Returns **false** when values differ or units differ.
-* Feet and inch measurements are not equal.
+Instead of creating a new class for volume, UC4:
 
----
+* Uses the same `Quantity` class
+* Introduces a new enum: `VolumeUnit`
+* Adds conversion extension methods
+* Converts all volume values to a base unit before comparison
 
-### 🧩 Implementation Overview
-
-* Added `Inch(value)` factory method in `LengthMeasure`.
-* Updated `LengthEqualityService` to enforce same-unit comparison.
-* Value comparison uses tolerance to handle floating-point precision.
+Base unit for volume → **Liter**
 
 ---
 
-### 🧪 Tests (NUnit)
+### 📐 Supported Volume Units
 
-* `SameInch_ShouldBeEqual`
-* `DifferentInch_ShouldNotBeEqual`
-* `FeetAndInch_ShouldNotBeEqual`
-
----
-
-### 📁 Project Structure
-
-QuantityMeasurementApp
-├── Models
-│   └── LengthMeasure.cs
-├── Services
-│   └── LengthEqualityService.cs
-└── QuantityMeasurementApp.Tests
-└── LengthEqualityServiceTests.cs
+| Unit   | Conversion to Liter |
+| ------ | ------------------- |
+| Liter  | 1                   |
+| Gallon | 3.78                |
 
 ---
 
-### 🎯 Concepts Covered
+### ⚙ Implementation Details
 
-* Multi-unit support
-* Unit-based equality rules
-* Floating-point tolerance comparison
-* Null safety
-* Unit testing with NUnit
+#### 1️⃣ VolumeUnit Enum
+
+Represents supported volume units.
+
+#### 2️⃣ VolumeUnitExtensions
+
+Provides conversion factor to base unit (Liter).
+
+#### 3️⃣ Generic Quantity Reuse
+
+The existing equality logic works for volume without duplication.
+
+---
+
+### ✅ Example Scenarios
+
+* 1 Gallon equals 3.78 Liters
+* Same unit same value → equal
+* Different values → not equal
+* Null comparison → false
+
+---
+
+### 🧪 Test Cases Covered
+
+* Liter to Liter equality
+* Gallon to Liter equality
+* Different volume values inequality
+* Null comparison handling
+* Cross-unit volume comparison
+
+---
+
+### 💡 Key Concepts Demonstrated
+
+* Generic design
+* DRY principle
+* Open/Closed principle
+* Extension methods
+* Unit conversion via base unit
+* Reusable equality logic
+
+---
+
+### 🚀 Outcome
+
+UC4 successfully extends the system to support **Volume measurements** without modifying existing length logic, demonstrating scalable architecture.
+
+The system can now support additional measurement types with minimal code changes.
+
+---
+
