@@ -4,12 +4,15 @@ class Program
 {
     static void Main()
     {
-        QuantityLength length1 = new QuantityLength(1, LengthUnit.Feet);
-        QuantityLength length2 = new QuantityLength(12, LengthUnit.Inch);
+        QuantityLength a = new QuantityLength(1, LengthUnit.Feet);
+        QuantityLength b = new QuantityLength(12, LengthUnit.Inch);
 
-        QuantityLength result = length1.Add(length2);
+        QuantityLength resultFeet = a.Add(b, LengthUnit.Feet);
+        QuantityLength resultInch = a.Add(b, LengthUnit.Inch);
+        QuantityLength resultYard = a.Add(b, LengthUnit.Yards);
 
-        Console.WriteLine(result); 
-        // Output: 2 Feet
+        Console.WriteLine(resultFeet);   // 2 Feet
+        Console.WriteLine(resultInch);   // 24 Inch
+        Console.WriteLine(resultYard);   // 0.667 Yards
     }
 }

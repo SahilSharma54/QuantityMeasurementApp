@@ -1,7 +1,7 @@
 namespace QuantityMeasurementApp.Models;
 
 /// <summary>
-/// Represents a length measurement with value and unit
+/// Represents a measurable length with value and unit
 /// </summary>
 public class QuantityLength
 {
@@ -17,9 +17,7 @@ public class QuantityLength
         Unit = unit;
     }
 
-    /// <summary>
-    /// Convert current quantity to base unit (Feet)
-    /// </summary>
+    /// Convert quantity to base unit (Feet)
     private double ToFeet()
     {
         return Unit switch
@@ -28,50 +26,55 @@ public class QuantityLength
             LengthUnit.Inch => Value / 12,
             LengthUnit.Yards => Value * 3,
             LengthUnit.Centimeters => Value / 30.48,
-            _ => throw new ArgumentException("Unsupported Unit")
+            _ => throw new ArgumentException("Unsupported unit")
         };
     }
 
-    /// <summary>
-    /// Convert feet to target unit
-    /// </summary>
-    private static double FromFeet(double value, LengthUnit targetUnit)
+    /// Convert feet value to any target unit
+    private static double FromFeet(double value, LengthUnit target)
     {
-        return targetUnit switch
+        return target switch
         {
             LengthUnit.Feet => value,
             LengthUnit.Inch => value * 12,
             LengthUnit.Yards => value / 3,
             LengthUnit.Centimeters => value * 30.48,
-            _ => throw new ArgumentException("Unsupported Unit")
+            _ => throw new ArgumentException("Unsupported unit")
         };
     }
 
-    /// <summary>
-    /// UC6: Add two length quantities
-    /// Result will be in the unit of the first operand
-    /// </summary>
+    // ==========================
+    // UC6 METHOD
+    // ==========================
+    /// Adds two quantities and returns result in unit of first operand
     public QuantityLength Add(QuantityLength other)
     {
         if (other == null)
             throw new ArgumentException("Second operand cannot be null");
 
-        // convert both to feet
-        double first = this.ToFeet();
-        double second = other.ToFeet();
+        double totalFeet = this.ToFeet() + other.ToFeet();
+        double result = FromFeet(totalFeet, this.Unit);
 
-        // add
-        double sumInFeet = first + second;
-
-        // convert result back to first unit
-        double resultValue = FromFeet(sumInFeet, this.Unit);
-
-        return new QuantityLength(resultValue, this.Unit);
+        return new QuantityLength(result, this.Unit);
     }
 
-    /// <summary>
-    /// Equality comparison based on feet conversion
-    /// </summary>
+    // ==========================
+    // UC7 METHOD (OVERLOADED)
+    // ==========================
+    /// Adds two quantities and returns result in explicit target unit
+    public QuantityLength Add(QuantityLength other, LengthUnit targetUnit)
+    {
+        if (other == null)
+            throw new ArgumentException("Second operand cannot be null");
+
+        double totalFeet = this.ToFeet() + other.ToFeet();
+
+        double result = FromFeet(totalFeet, targetUnit);
+
+        return new QuantityLength(result, targetUnit);
+    }
+
+    /// Equality comparison using base unit
     public override bool Equals(object? obj)
     {
         if (obj is not QuantityLength other)
