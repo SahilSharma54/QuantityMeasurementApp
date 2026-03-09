@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using QuantityMeasurementApp.Models;
+using QuantityMeasurementApp.Services;
 
 namespace QuantityMeasurementApp.Tests.Models;
 
@@ -79,22 +80,77 @@ public class QuantityLengthTests
     [Test]
 public void Given1Feet_WhenConvertedToInch_ShouldReturn12()
 {
-    double result = QuantityLength.Convert(1, LengthUnit.Feet, LengthUnit.Inch);
+    double result = LengthConverter.Convert(1, LengthUnit.Feet, LengthUnit.Inch);
     Assert.AreEqual(12, result);
 }
 
 [Test]
 public void Given3Feet_WhenConvertedToYard_ShouldReturn1()
 {
-    double result = QuantityLength.Convert(3, LengthUnit.Feet, LengthUnit.Yards);
+    double result = LengthConverter.Convert(3, LengthUnit.Feet, LengthUnit.Yards);
     Assert.AreEqual(1, result);
 }
 
 [Test]
 public void Given1Inch_WhenConvertedToCentimeter_ShouldReturn2Point54()
 {
-    double result = QuantityLength.Convert(1, LengthUnit.Inch, LengthUnit.Centimeters);
+    double result = LengthConverter.Convert(1, LengthUnit.Inch, LengthUnit.Centimeters);
     Assert.AreEqual(2.54, result, 0.01);
+}
+
+[Test]
+public void GivenFeetAndFeet_WhenAdded_ShouldReturnFeet()
+{
+    QuantityLength a = new QuantityLength(1, LengthUnit.Feet);
+    QuantityLength b = new QuantityLength(2, LengthUnit.Feet);
+
+    QuantityLength result = a.Add(b);
+
+    Assert.AreEqual(new QuantityLength(3, LengthUnit.Feet), result);
+}
+
+[Test]
+public void GivenFeetAndInch_WhenAdded_ShouldReturnFeet()
+{
+    QuantityLength a = new QuantityLength(1, LengthUnit.Feet);
+    QuantityLength b = new QuantityLength(12, LengthUnit.Inch);
+
+    QuantityLength result = a.Add(b);
+
+    Assert.AreEqual(new QuantityLength(2, LengthUnit.Feet), result);
+}
+
+[Test]
+public void GivenInchAndFeet_WhenAdded_ShouldReturnInch()
+{
+    QuantityLength a = new QuantityLength(12, LengthUnit.Inch);
+    QuantityLength b = new QuantityLength(1, LengthUnit.Feet);
+
+    QuantityLength result = a.Add(b);
+
+    Assert.AreEqual(new QuantityLength(24, LengthUnit.Inch), result);
+}
+
+[Test]
+public void GivenYardsAndFeet_WhenAdded_ShouldReturnYards()
+{
+    QuantityLength a = new QuantityLength(1, LengthUnit.Yards);
+    QuantityLength b = new QuantityLength(3, LengthUnit.Feet);
+
+    QuantityLength result = a.Add(b);
+
+    Assert.AreEqual(new QuantityLength(2, LengthUnit.Yards), result);
+}
+
+[Test]
+public void GivenCentimetersAndInch_WhenAdded_ShouldReturnCentimeters()
+{
+    QuantityLength a = new QuantityLength(2.54, LengthUnit.Centimeters);
+    QuantityLength b = new QuantityLength(1, LengthUnit.Inch);
+
+    QuantityLength result = a.Add(b);
+
+    Assert.AreEqual(5.08, result.Value, 0.01);
 }
 
 
