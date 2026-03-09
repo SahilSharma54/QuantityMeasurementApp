@@ -1,75 +1,54 @@
-using QuantityMeasurementApp.Interfaces;
-
-namespace QuantityMeasurementApp.Models;
-
-public class Quantity<U> where U : Enum
+namespace QuantityMeasurementApp.Models
 {
-    public double Value { get; }
-    public U Unit { get; }
-
-    public Quantity(double value, U unit)
+    public class Quantity<TUnit> where TUnit : struct, Enum
     {
-        if (!double.IsFinite(value))
-            throw new ArgumentException("Invalid value");
+        public double Value { get; }
+        public TUnit Unit { get; }
 
-        Unit = unit ?? throw new ArgumentException("Unit cannot be null");
-        Value = value;
-    }
+        public Quantity(double value, TUnit unit)
+        {
+            Value = value;
+            Unit = unit;
+        }
 
-    private double ToBaseUnit()
-    {
-        dynamic u = Unit;
-        return u.ConvertToBaseUnit(Value);
-    }
+        // Convert quantity to base unit value
+        public double ToBaseUnit()
+        {
+            if (typeof(TUnit) == typeof(VolumeUnit))
+                return ((VolumeUnit)(object)Unit).ConvertToBaseUnit(Value);
+            throw new NotImplementedException("Conversion for this unit type is not implemented");
+        }
 
-    public Quantity<U> ConvertTo(U targetUnit)
-    {
-        dynamic source = Unit;
-        dynamic target = targetUnit;
+        // Convert to another unit
+        public Quantity<TUnit> ConvertTo(TUnit targetUnit)
+        {
+            double baseValue = ToBaseUnit();
 
-        double baseValue = source.ConvertToBaseUnit(Value);
-        double converted = target.ConvertFromBaseUnit(baseValue);
+            double convertedValue = targetUnit switch
+            {
+                VolumeUnit v when typeof(TUnit) == typeof(VolumeUnit) => baseValue / ((VolumeUnit)(object)targetUnit).ConvertToBaseUnit(1),
+                _ => throw new NotImplementedException("Conversion for this unit type is not implemented")
+            };
 
-        return new Quantity<U>(Math.Round(converted, 2), targetUnit);
-    }
+            return new Quantity<TUnit>(convertedValue, targetUnit);
+        }
 
-    public Quantity<U> Add(Quantity<U> other)
-    {
-        double sum = this.ToBaseUnit() + other.ToBaseUnit();
+        public Quantity<TUnit> Add(Quantity<TUnit> other)
+        {
+            double sumBase = this.ToBaseUnit() + other.ToBaseUnit();
+            return new Quantity<TUnit>(sumBase, this.Unit);
+        }
 
-        dynamic unit = Unit;
-        double result = unit.ConvertFromBaseUnit(sum);
-
-        return new Quantity<U>(Math.Round(result, 2), Unit);
-    }
-
-    public Quantity<U> Add(Quantity<U> other, U targetUnit)
-    {
-        double sum = this.ToBaseUnit() + other.ToBaseUnit();
-
-        dynamic target = targetUnit;
-        double result = target.ConvertFromBaseUnit(sum);
-
-        return new Quantity<U>(Math.Round(result, 2), targetUnit);
-    }
-
-    public override bool Equals(object? obj)
-    {
-        if (obj == null || obj.GetType() != this.GetType())
+        public override bool Equals(object? obj)
+        {
+            if (obj is Quantity<TUnit> other)
+                return Math.Abs(this.ToBaseUnit() - other.ToBaseUnit()) < 0.0001;
             return false;
+        }
 
-        Quantity<U> other = (Quantity<U>)obj;
-
-        return Math.Abs(this.ToBaseUnit() - other.ToBaseUnit()) < 0.0001;
-    }
-
-    public override int GetHashCode()
-    {
-        return ToBaseUnit().GetHashCode();
-    }
-
-    public override string ToString()
-    {
-        return $"{Value} {Unit}";
+        public override int GetHashCode()
+        {
+            return ToBaseUnit().GetHashCode();
+        }
     }
 }
