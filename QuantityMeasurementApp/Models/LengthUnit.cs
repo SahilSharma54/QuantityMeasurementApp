@@ -1,42 +1,28 @@
-namespace QuantityMeasurementApp.Models;
-
-/// <summary>
-/// Standalone enum responsible for unit conversion.
-/// Each unit knows how to convert to and from base unit (Feet).
-/// </summary>
-public enum LengthUnit
+namespace QuantityMeasurementApp.Models
 {
-    Feet,
-    Inch,
-    Yards,
-    Centimeters
-}
-
-public static class LengthUnitExtensions
-{
-    /// Convert given value to base unit (Feet)
-    public static double ConvertToBaseUnit(this LengthUnit unit, double value)
+    public class LengthUnit
     {
-        return unit switch
-        {
-            LengthUnit.Feet => value,
-            LengthUnit.Inch => value / 12.0,
-            LengthUnit.Yards => value * 3.0,
-            LengthUnit.Centimeters => value / 30.48,
-            _ => throw new ArgumentException("Unsupported unit")
-        };
-    }
+        public double ConversionFactor { get; }
 
-    /// Convert base unit (Feet) to target unit
-    public static double ConvertFromBaseUnit(this LengthUnit unit, double baseValue)
-    {
-        return unit switch
+        private LengthUnit(double factor)
         {
-            LengthUnit.Feet => baseValue,
-            LengthUnit.Inch => baseValue * 12.0,
-            LengthUnit.Yards => baseValue / 3.0,
-            LengthUnit.Centimeters => baseValue * 30.48,
-            _ => throw new ArgumentException("Unsupported unit")
-        };
+            ConversionFactor = factor;
+        }
+
+        // Static Units
+        public static readonly LengthUnit Inch = new LengthUnit(1);
+        public static readonly LengthUnit Feet = new LengthUnit(12);
+        public static readonly LengthUnit Yards = new LengthUnit(36);
+        public static readonly LengthUnit Centimeters = new LengthUnit(0.393701);
+
+        public double ConvertToBaseUnit(double value)
+        {
+            return value * ConversionFactor;
+        }
+
+        public double ConvertFromBaseUnit(double value)
+        {
+            return value / ConversionFactor;
+        }
     }
 }

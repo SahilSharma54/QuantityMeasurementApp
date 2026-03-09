@@ -1,36 +1,27 @@
-namespace QuantityMeasurementApp.Models;
-
-public enum WeightUnit
+namespace QuantityMeasurementApp.Models
 {
-    Kilogram,
-    Gram,
-    Pound
-}
-
-public static class WeightUnitExtensions
-{
-    private const double GramFactor = 0.001;
-    private const double PoundFactor = 0.453592;
-
-    public static double ConvertToBaseUnit(this WeightUnit unit, double value)
+    public class WeightUnit
     {
-        return unit switch
-        {
-            WeightUnit.Kilogram => value,
-            WeightUnit.Gram => value * GramFactor,
-            WeightUnit.Pound => value * PoundFactor,
-            _ => throw new ArgumentException("Unsupported weight unit")
-        };
-    }
+        public double ConversionFactor { get; }
 
-    public static double ConvertFromBaseUnit(this WeightUnit unit, double baseValue)
-    {
-        return unit switch
+        private WeightUnit(double factor)
         {
-            WeightUnit.Kilogram => baseValue,
-            WeightUnit.Gram => baseValue / GramFactor,
-            WeightUnit.Pound => baseValue / PoundFactor,
-            _ => throw new ArgumentException("Unsupported weight unit")
-        };
+            ConversionFactor = factor;
+        }
+
+        // Static Units
+        public static readonly WeightUnit Gram = new WeightUnit(1);
+        public static readonly WeightUnit Kilogram = new WeightUnit(1000);
+        public static readonly WeightUnit Tonne = new WeightUnit(1000000);
+
+        public double ConvertToBaseUnit(double value)
+        {
+            return value * ConversionFactor;
+        }
+
+        public double ConvertFromBaseUnit(double value)
+        {
+            return value / ConversionFactor;
+        }
     }
 }
