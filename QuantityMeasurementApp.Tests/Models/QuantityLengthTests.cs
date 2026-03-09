@@ -75,4 +75,27 @@ public class QuantityLengthTests
 
         Assert.IsTrue(cm.Equals(inch));
     }
+
+    [Test]
+public void Given1Feet_WhenConvertedToInch_ShouldReturn12()
+{
+    double result = QuantityLength.Convert(1, LengthUnit.Feet, LengthUnit.Inch);
+    Assert.AreEqual(12, result);
+}
+
+[Test]
+public void Given3Feet_WhenConvertedToYard_ShouldReturn1()
+{
+    double result = QuantityLength.Convert(3, LengthUnit.Feet, LengthUnit.Yards);
+    Assert.AreEqual(1, result);
+}
+
+[Test]
+public void Given1Inch_WhenConvertedToCentimeter_ShouldReturn2Point54()
+{
+    double result = QuantityLength.Convert(1, LengthUnit.Inch, LengthUnit.Centimeters);
+    Assert.AreEqual(2.54, result, 0.01);
+}
+
+
 }

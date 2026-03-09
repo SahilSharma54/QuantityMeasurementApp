@@ -1,9 +1,5 @@
 namespace QuantityMeasurementApp.Models;
 
-/// <summary>
-/// Generic quantity class representing length with value + unit.
-/// Eliminates duplication between Feet and Inch.
-/// </summary>
 public class QuantityLength
 {
     public double Value { get; }
@@ -11,38 +7,53 @@ public class QuantityLength
 
     public QuantityLength(double value, LengthUnit unit)
     {
-        if (double.IsNaN(value))
-            throw new ArgumentException("Value must be numeric");
-
         Value = value;
         Unit = unit;
     }
 
-    /// <summary>
-    /// Converts measurement to base unit (feet).
-    /// </summary>
-    private double ConvertToBase()
+    private double ConvertToFeet()
     {
-        return Value * Unit.ToInchFactor();
+        return Unit switch
+        {
+            LengthUnit.Feet => Value,
+            LengthUnit.Inch => Value / 12,
+            LengthUnit.Yards => Value * 3,
+            LengthUnit.Centimeters => Value / 30.48,
+            _ => throw new ArgumentException("Unsupported Unit")
+        };
     }
 
-    /// <summary>
-    /// Equality comparison using base conversion.
-    /// Supports cross-unit equality (UC3 main feature).
-    /// </summary>
+    public static double Convert(double value, LengthUnit from, LengthUnit to)
+    {
+        double valueInFeet = from switch
+        {
+            LengthUnit.Feet => value,
+            LengthUnit.Inch => value / 12,
+            LengthUnit.Yards => value * 3,
+            LengthUnit.Centimeters => value / 30.48,
+            _ => throw new ArgumentException("Invalid Unit")
+        };
+
+        return to switch
+        {
+            LengthUnit.Feet => valueInFeet,
+            LengthUnit.Inch => valueInFeet * 12,
+            LengthUnit.Yards => valueInFeet / 3,
+            LengthUnit.Centimeters => valueInFeet * 30.48,
+            _ => throw new ArgumentException("Invalid Unit")
+        };
+    }
+
     public override bool Equals(object? obj)
     {
-        if (obj is null || obj is not QuantityLength other)
+        if (obj is not QuantityLength other)
             return false;
 
-        double a = ConvertToBase();
-        double b = other.ConvertToBase();
-
-        return Math.Abs(a - b) < 0.0001;
+        return Math.Abs(ConvertToFeet() - other.ConvertToFeet()) < 0.0001;
     }
 
     public override int GetHashCode()
     {
-        return ConvertToBase().GetHashCode();
+        return ConvertToFeet().GetHashCode();
     }
 }
