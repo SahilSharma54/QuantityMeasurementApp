@@ -197,4 +197,36 @@ public void GivenInchAndInch_WhenTargetCentimeters_ShouldReturnCentimeters()
     Assert.AreEqual(5.08, result.Value, 0.01);
 }
 
+[Test]
+public void GivenFeetAndInch_WhenConvertedToInch_ShouldReturn12()
+{
+    QuantityLength length = new QuantityLength(1, LengthUnit.Feet);
+
+    QuantityLength result = length.ConvertTo(LengthUnit.Inch);
+
+    Assert.AreEqual(12, result.Value);
+}
+
+[Test]
+public void GivenFeetAndInch_WhenAdded_ShouldReturn2Feet()
+{
+    QuantityLength a = new QuantityLength(1, LengthUnit.Feet);
+    QuantityLength b = new QuantityLength(12, LengthUnit.Inch);
+
+    QuantityLength result = a.Add(b);
+
+    Assert.AreEqual(new QuantityLength(2, LengthUnit.Feet), result);
+}
+
+[Test]
+public void GivenFeetAndInch_WhenAddedWithTargetYard_ShouldReturnYard()
+{
+    QuantityLength a = new QuantityLength(1, LengthUnit.Feet);
+    QuantityLength b = new QuantityLength(12, LengthUnit.Inch);
+
+    QuantityLength result = a.Add(b, LengthUnit.Yards);
+
+    Assert.AreEqual(0.667, result.Value, 0.01);
+}
+
 }
